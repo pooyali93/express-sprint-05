@@ -20,9 +20,9 @@ class Accessor {
     }
   };
   
-  read = async (id , variant) => {
+  read = async (id , variant, query) => {
     try {
-      const {sql, data} = this.model.buildReadQuery(id, variant);
+      const {sql, data} = this.model.buildReadQuery(id, variant, query);
       const [result] = await this.database.query(sql, data);
       return (result.length === 0)
         ? { isSuccess: false, result: null, message: 'No record(s) found' }
@@ -35,13 +35,12 @@ class Accessor {
   
   update = async (record, id) => {
     try {
-      const {sql, data} = this.model.buildUpdateQuery(record, id);
-      const status = await this.database.query(sql,data); //id
+      const { sql, data } = this.model.buildUpdateQuery(record, id);
+      const status = await this.database.query(sql, data);
       if (status[0].affectedRows === 0)
         return { isSuccess: false, result: null, message: 'Failed to update record: no rows affected' };
-  
-      const { isSuccess, result, message } = await this.read(id, null);
-  
+
+      const { isSuccess, result, message } = await this.read(id, null);      
       return isSuccess
         ? { isSuccess: true, result: result, message: 'Record successfully recovered' }
         : { isSuccess: false, result: null, message: `Failed to recover the updated record: ${message}` };

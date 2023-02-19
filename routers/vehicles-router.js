@@ -26,7 +26,10 @@ const router = Router();
 
 router.get('/', (req, res) => controller.get(req, res, null));
 router.get('/:id(\\d+)', (req, res) => controller.get(req, res, "VEHICLE_ID"));
-router.get('/:make', (req, res) => controller.get(req, res, "make"));
+router.get('/make=:make', (req, res) => controller.get(req, res, "make"));
+router.get('/model=:model', (req, res) => controller.get(req, res, "model"));
+
+
 
 router.post('/', controller.post);
 router.put('/:id', controller.put);

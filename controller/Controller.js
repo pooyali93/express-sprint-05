@@ -7,14 +7,17 @@ class Controller {
   // Methods
   get = async (req, res, variant) => {
     const id = req.params.id;
+    const query = req.query;
 
+    console.log(JSON.stringify(req.query));
     // Validation-------------- 
-    const {isVaild, message: validatorMessage} = this.validator.get(id);
-    if(!isVaild) return res.status(404).json({ message: validatorMessage });
+    const {isValid, message: validatorMessage} = this.validator.get(id);
+    if (!isValid) return res.status(404).json({ message: validatorMessage });
 
 
     // Data Access 
-    const { isSuccess, result, message: accessMessage } = await this.accessor.read(id, variant);
+
+    const { isSuccess, result, message: accessMessage } = await this.accessor.read(id, variant, query);
     if (!isSuccess) return res.status(400).json({ message: accessMessage });
     // Response to request
     res.status(200).json(result);
@@ -23,8 +26,8 @@ class Controller {
   post = async (req, res) => {
     const record = req.body;
        // Validate Request
-       const {isVaild, message: validatorMessage} = this.validator.post(record);
-       if(!isVaild) return res.status(404).json({ message: validatorMessage });
+       const {isValid, message: validatorMessage} = this.validator.post(record);
+       if(!isValid) return res.status(404).json({ message: validatorMessage });
 
       // Data Access 
     const { isSuccess, result, message: accessMessage } = await this.accessor.create(record)
@@ -39,8 +42,8 @@ class Controller {
     const record = req.body;
   
     // Validate Request 
-    const {isVaild, message: validatorMessage} = this.validator.put({id , record});
-    if(!isVaild) return res.status(404).json({ message: validatorMessage });
+    const {isValid, message: validatorMessage} = this.validator.put({id , record});
+    if(!isValid) return res.status(404).json({ message: validatorMessage });
 
     // Data Access 
     const { isSuccess, result, message: accessMessage } = await this.accessor.update(record, id);
@@ -53,8 +56,8 @@ class Controller {
     const id = req.params.id;
     
     // Validate Request
- const {isVaild, message: validatorMessage} = this.validator.delete(id);
-    if(!isVaild) return res.status(404).json({ message: validatorMessage });
+ const {isValid, message: validatorMessage} = this.validator.delete(id);
+    if(!isValid) return res.status(404).json({ message: validatorMessage });
     // Access data
     const { isSuccess, result, message: accessorMessage } = await this.accessor.delete(id);
     if (!isSuccess) return res.status(400).json({ message: accessorMessage });

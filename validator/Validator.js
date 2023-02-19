@@ -21,7 +21,7 @@ class Validator {
   validate = (schema, value) => {
     const {error} = schema.validate(value, {abortEarl:false});
     return error 
-     ? {isVaild: false, message: this.reportErrors(error) }
+     ? {isValid: false, message: this.reportErrors(error) }
      : {isValid: true, message: null }
 
   }
