@@ -1,14 +1,18 @@
 import { Router } from "express";
 import database from "../database.js";
 import Model from "../models/Model.js";
+import Validator from "../validator/Validator.js";
 import Accessor from "../accessor/Accessor.js";
 import Controller from "../controller/Controller.js";
 import bookingsModel from "../models/bookings-model.js"
+import schema from "../validator/users-schema.js";
 
 
 // Model -----------------------------------
 const model = new Model(bookingsModel);
 
+// Validator--------------------------------
+const validator = new Validator(schema);
 
 // Data Accessor
 const accessor = new Accessor(model, database);
@@ -16,25 +20,17 @@ const accessor = new Accessor(model, database);
 
 
 // Controller ----------------------------
-const controller = new Controller(accessor);
-
-const router = Router();
-// Queery Builders ---------------------------
-
-
-
+const controller = new Controller(validator, accessor);
 
 
 
 // Endpoints ---------------------------
+const router = Router();
+
 router.get('/', (req, res) => controller.get(req, res, null));
 router.get('/:id(\\d+)', (req, res) => controller.get(req, res, 'BOOKING_ID'));
-//router.get('/:id', (req, res) => controller.get(req, res, null));
-router.get('/salesperson/:id', (req, res) => controller.get(req, res, "EMP_ID"));
-router.get('/salesperson/', (req, res) => controller.get(req, res, null));
-//router.get('/users/:id', (req, res) => controller.get(req, res, "Customer_ID"));
-router.get('/customers/:id', (req, res) => controller.get(req, res, "C_ID"));
-
+router.get('/salesperson/:id(\\d+)', (req, res) => controller.get(req, res, "EMP_ID"));
+router.get('/customers/:id(\\d+)', (req, res) => controller.get(req, res, "CUST_ID"));
 
 router.post('/', controller.post);
 router.put('/:id', controller.put);

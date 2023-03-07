@@ -6,7 +6,6 @@ const schema = {};
 schema.mutableFields = ['VEHICLEURL', 'MAKE', 'MODEL', 'COLOUR', 'MODELYEAR', 'NOOFDOORS', 'PRICE', 'FUELTYPE', 'TRANSMISSION', 'ENGINESIZE', 'MILEAGE'];
 
 schema.recordSchema = joi.object({
-  VEHICLE_ID: joi.number().integer(),
   VEHICLEURL: joi.string().uri().allow(null),
   MAKE:joi.string().min(2),
   MODEL: joi.string().min(1),

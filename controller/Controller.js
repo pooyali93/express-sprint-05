@@ -9,9 +9,10 @@ class Controller {
     const id = req.params.id;
     const query = req.query;
 
-    console.log(JSON.stringify(req.query));
+  console.log(JSON.stringify(req.params.id));
     // Validation-------------- 
     const {isValid, message: validatorMessage} = this.validator.get(id);
+
     if (!isValid) return res.status(404).json({ message: validatorMessage });
 
 
@@ -25,14 +26,15 @@ class Controller {
   
   post = async (req, res) => {
     const record = req.body;
-       // Validate Request
-       const {isValid, message: validatorMessage} = this.validator.post(record);
-       if(!isValid) return res.status(404).json({ message: validatorMessage });
+    
+    // Validate request
+    const { isValid, message: validatorMessage } = this.validator.post(record);
+    if (!isValid) return res.status(404).json({ message: validatorMessage });
 
-      // Data Access 
-    const { isSuccess, result, message: accessMessage } = await this.accessor.create(record)
-    ;
-    if (!isSuccess) return res.status(400).json({ message: accessMessage });
+    // Access data
+    const { isSuccess, result, message: accessorMessage } = await this.accessor.create(record);
+    if (!isSuccess) return res.status(400).json({ message: accessorMessage });
+    
     // Response to request
     res.status(201).json(result);
   };
